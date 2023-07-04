@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SeriesDataRaw : MonoBehaviour
+public class SeriesDataRaw
 {
     public string id;
     public string title;

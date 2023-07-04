@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SeriesData : MonoBehaviour
+public class SeriesData
 {
-    public static List<SeriesData> list = new List<SeriesData>();
     public int id;
     public string title;
     public string genre;

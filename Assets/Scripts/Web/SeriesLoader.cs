@@ -4,12 +4,14 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 using Newtonsoft.Json;
+using UnityEngine.Events;
 
 public class SeriesLoader : MonoBehaviour
 {
     private string jsonFilePath = "./Assets/www/series.json";
 
-    public List<SeriesData> seriesList = new List<SeriesData>();
+    public static List<SeriesData> seriesList = new List<SeriesData>();
+    public static UnityEvent ON_SeriesUpdated = new UnityEvent();
 
     void Start()
     {
@@ -52,18 +54,24 @@ public class SeriesLoader : MonoBehaviour
 
         List<SeriesDataRaw> lSeriesListRaw = JsonConvert.DeserializeObject<List<SeriesDataRaw>>(jsonString);
         
-        SeriesData lData = new SeriesData();
+        SeriesData lData;
 
         foreach (SeriesDataRaw lRaw in lSeriesListRaw)
         {
+            lData = new SeriesData();
+
             lData.id = StringToInt(lRaw.id);
             lData.title = lRaw.title;
             lData.genre = lRaw.genre;
             lData.note = StringToInt(lRaw.note);
             lData.episodes = StringToInt(lRaw.episodes);
 
+            Debug.Log(lRaw.title);
+
             seriesList.Add(lData);
         }
+
+        ON_SeriesUpdated.Invoke();
     }
 
     private int StringToInt(string pString)

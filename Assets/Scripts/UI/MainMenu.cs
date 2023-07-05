@@ -30,11 +30,14 @@ public class MainMenu : MonoBehaviour
 
         // Create new buttons
         GameObject lNewButton;
+        SeriesSelectionButton lSelectionButton;
+
         foreach (SeriesData seriesData in SeriesLoader.seriesList)
         {
             lNewButton = Instantiate(serieSelectionButton);
             lNewButton.transform.SetParent(verticalLayoutGroup.transform, false);
-            lNewButton.GetComponentInChildren<TextMeshProUGUI>().text = seriesData.title;
+            lSelectionButton = lNewButton.GetComponentInChildren<SeriesSelectionButton>();
+            lSelectionButton.Init(seriesData.id - 1);
         }        
     }
 }

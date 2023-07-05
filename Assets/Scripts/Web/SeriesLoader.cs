@@ -10,7 +10,6 @@ public class SeriesLoader : MonoBehaviour
 {
     private string jsonFilePath = "./Assets/www/series.json";
 
-    public static List<SeriesData> seriesList = new List<SeriesData>();
     public static UnityEvent ON_SeriesUpdated = new UnityEvent();
 
     void Start()
@@ -50,8 +49,22 @@ public class SeriesLoader : MonoBehaviour
 
     private void ReadJSON()
     {
-        string jsonString = File.ReadAllText(jsonFilePath);
+        string jsonString = File.ReadAllText(jsonFilePath);        
 
+        // Get genres
+        List<GenreDataRaw> lGenreListRaw = JsonConvert.DeserializeObject<RootObject>(jsonString).genre;
+
+        foreach (GenreDataRaw lRaw in lGenreListRaw)
+        {
+            GenreData lData = new GenreData();
+
+            lData.id = StringToInt(lRaw.id);
+            lData.Genre = lRaw.Genre;
+
+            GenreData.list.Add(lData);
+        }
+
+        // Get series
         List<SeriesDataRaw> lSeriesListRaw = JsonConvert.DeserializeObject<RootObject>(jsonString).series;
 
         foreach (SeriesDataRaw lRaw in lSeriesListRaw)
@@ -60,11 +73,11 @@ public class SeriesLoader : MonoBehaviour
 
             lData.id = StringToInt(lRaw.id);
             lData.title = lRaw.title;
-            lData.genre = lRaw.genre;
+            lData.genre = GenreData.GetGenreByName(lRaw.genre);
             lData.note = StringToInt(lRaw.note);
             lData.episodes = StringToInt(lRaw.episodes);
 
-            seriesList.Add(lData);
+            SeriesData.list.Add(lData);
         }
 
         ON_SeriesUpdated.Invoke();

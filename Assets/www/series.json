@@ -35,5 +35,15 @@
             "note": "2",
             "episodes": "9"
         }
+    ],
+    "genre": [
+        {
+            "id": "1",
+            "Genre": "Sci-fi"
+        },
+        {
+            "id": "2",
+            "Genre": "Action"
+        }
     ]
 }

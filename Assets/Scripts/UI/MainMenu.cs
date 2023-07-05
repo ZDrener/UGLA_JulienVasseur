@@ -8,10 +8,13 @@ using TMPro;
 
 public class MainMenu : MonoBehaviour
 {
-    [SerializeField] private GameObject serieSelectionButton;
-    [SerializeField] private GameObject verticalLayoutGroup;
+    public static bool groupByGenre = false;
 
-    private List<GameObject> currentSelectionButtons = new List<GameObject>();
+    [SerializeField] private GameObject _SerieSelectionButton;
+    [SerializeField] private GameObject _Separator;
+    [SerializeField] private GameObject _VerticalLayoutGroup;
+
+    private List<GameObject> _CurrentButtons = new List<GameObject>();    
 
     private void Awake()
     {
@@ -21,23 +24,62 @@ public class MainMenu : MonoBehaviour
     private void UpdateMenu()
     {
         Debug.Log("Launched update method");
+        DeleteOldButtons();
+        CreateButtons();
+    }
 
-        // Destroy all previous buttons
-        foreach (GameObject lOldButton in currentSelectionButtons)
+    private void CreateButtons()
+    {
+        if (groupByGenre)
         {
-            Destroy(lOldButton);
+            foreach (GenreData lGenre in GenreData.list)
+            {
+                CreateSeparator(lGenre);
+                foreach (SeriesData seriesData in SeriesData.list)
+                {
+                    if (seriesData.genre.Equals(lGenre))
+                        CreateSelectionButton(seriesData);
+                }
+            }
         }
+        else
+        {
+            foreach (SeriesData seriesData in SeriesData.list)
+            {
+                CreateSelectionButton(seriesData);
+            }            
+        }        
+    }
 
-        // Create new buttons
+    private void CreateSeparator(GenreData lGenre)
+    {
+        GameObject lSeparator;
+        Separator lSeparatorComponent;
+
+        lSeparator = Instantiate(_Separator);
+        lSeparator.transform.SetParent(_VerticalLayoutGroup.transform, false);
+        _CurrentButtons.Add(lSeparator);
+
+        lSeparatorComponent = lSeparator.GetComponentInChildren<Separator>();
+        lSeparatorComponent.Init(lGenre.id);
+    }
+
+    private void CreateSelectionButton(SeriesData seriesData)
+    {
         GameObject lNewButton;
         SeriesSelectionButton lSelectionButton;
 
-        foreach (SeriesData seriesData in SeriesLoader.seriesList)
-        {
-            lNewButton = Instantiate(serieSelectionButton);
-            lNewButton.transform.SetParent(verticalLayoutGroup.transform, false);
-            lSelectionButton = lNewButton.GetComponentInChildren<SeriesSelectionButton>();
-            lSelectionButton.Init(seriesData.id - 1);
-        }        
+        lNewButton = Instantiate(_SerieSelectionButton);
+        lNewButton.transform.SetParent(_VerticalLayoutGroup.transform, false);
+        _CurrentButtons.Add(lNewButton);
+
+        lSelectionButton = lNewButton.GetComponentInChildren<SeriesSelectionButton>();
+        lSelectionButton.Init(seriesData.id);
     }
+
+    private void DeleteOldButtons()
+    {
+        foreach (GameObject lOldButton in _CurrentButtons) Destroy(lOldButton);
+    }
+
 }

@@ -25,7 +25,7 @@ public class SeriesInfo : MonoBehaviour
 
     private void UpdateSeriesInfo(int pSeriesID)
     {
-        SeriesData lData = SeriesLoader.seriesList[pSeriesID];
+        SeriesData lData = SeriesData.GetSeriesByID(pSeriesID);
 
         _Title.text = lData.title;
         _Genre.text = GENRE_PREFIX + lData.genre;

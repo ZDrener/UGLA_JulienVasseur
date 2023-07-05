@@ -14,11 +14,12 @@ public class SeriesSelectionButton : MonoBehaviour
     public void Init(int pID)
     {
         _ID = pID;
-        _Title.text = SeriesLoader.seriesList[_ID].title;
+        _Title.text = SeriesData.GetSeriesByID(pID).title;
     }
 
     public void ShowSeriesInfo()
     {
+        Debug.Log(_ID);
         ON_SeriesSelection.Invoke(_ID);
     }
 }

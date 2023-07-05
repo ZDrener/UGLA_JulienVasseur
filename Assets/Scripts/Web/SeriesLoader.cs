@@ -8,13 +8,12 @@ using UnityEngine.Events;
 
 public class SeriesLoader : MonoBehaviour
 {
-    private string jsonFilePath = "./Assets/www/series.json";
+    private string _JsonFilePath = "./Assets/www/series.json";
 
     public static UnityEvent ON_SeriesUpdated = new UnityEvent();
 
     void Start()
     {
-        // A correct website page.
         StartCoroutine(GetRequest("http://ugla/"));
     }
 
@@ -49,7 +48,7 @@ public class SeriesLoader : MonoBehaviour
 
     private void ReadJSON()
     {
-        string jsonString = File.ReadAllText(jsonFilePath);        
+        string jsonString = File.ReadAllText(_JsonFilePath);        
 
         // Get genres
         List<GenreDataRaw> lGenreListRaw = JsonConvert.DeserializeObject<RootObject>(jsonString).genre;

@@ -28,7 +28,7 @@ public class SeriesInfo : MonoBehaviour
         SeriesData lData = SeriesData.GetSeriesByID(pSeriesID);
 
         _Title.text = lData.title;
-        _Genre.text = GENRE_PREFIX + lData.genre;
+        _Genre.text = GENRE_PREFIX + lData.genre.Genre;
         _Episodes.text = EPISODES_PREFIX + lData.episodes;
         _Note.text = lData.note.ToString();
         _NoteBar.fillAmount = lData.note / MAX_NOTE;

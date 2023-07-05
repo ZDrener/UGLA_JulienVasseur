@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 
 
 public class MainMenu : MonoBehaviour
@@ -13,6 +14,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private GameObject _SerieSelectionButton;
     [SerializeField] private GameObject _Separator;
     [SerializeField] private GameObject _VerticalLayoutGroup;
+    [SerializeField] private GameObject _SearchBar;
 
     private List<GameObject> _CurrentButtons = new List<GameObject>();    
 
@@ -48,7 +50,9 @@ public class MainMenu : MonoBehaviour
             {
                 CreateSelectionButton(seriesData);
             }            
-        }        
+        }
+
+        Search();
     }
 
     private void CreateSeparator(GenreData lGenre)
@@ -77,9 +81,41 @@ public class MainMenu : MonoBehaviour
         lSelectionButton.Init(seriesData.id);
     }
 
-    private void DeleteOldButtons()
+    public void Search()
     {
-        foreach (GameObject lOldButton in _CurrentButtons) Destroy(lOldButton);
+        string lSearchText = _SearchBar.GetComponent<TMP_InputField>().text;
+        int lTxtLength = lSearchText.Length;
+
+        if (lTxtLength == 0) foreach (GameObject lButton in _CurrentButtons) lButton.SetActive(true);
+
+        SeriesSelectionButton lSelectionButton;
+        SeriesData lData;
+        foreach (GameObject lButton in _CurrentButtons)
+        {
+            if (lButton.TryGetComponent(out lSelectionButton))
+            {
+                lData = SeriesData.GetSeriesByID(lSelectionButton.seriesID);
+
+                if(lData.title.ToLower().Contains(lSearchText.ToLower()))
+                    lButton.SetActive(true);
+
+                else if (lData.genre.Genre.ToLower().Contains(lSearchText.ToLower()))
+                    lButton.SetActive(true);
+
+                else
+                    lButton.SetActive(false);
+            }
+        }
     }
 
+    private void DeleteOldButtons()
+    {
+        GameObject lButton;
+        for (int i = _CurrentButtons.Count - 1; i >= 0; i--)
+        {
+            lButton = _CurrentButtons[i];
+            _CurrentButtons.Remove(lButton);
+            Destroy(lButton);
+        }      
+    }
 }

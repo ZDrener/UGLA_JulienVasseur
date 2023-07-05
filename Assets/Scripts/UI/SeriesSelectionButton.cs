@@ -9,17 +9,17 @@ public class SeriesSelectionButton : MonoBehaviour
 
     [SerializeField] private TMPro.TextMeshProUGUI _Title;
 
-    private int _ID;
+    public int seriesID;
 
     public void Init(int pID)
     {
-        _ID = pID;
+        seriesID = pID;
         _Title.text = SeriesData.GetSeriesByID(pID).title;
     }
 
     public void ShowSeriesInfo()
     {
-        Debug.Log(_ID);
-        ON_SeriesSelection.Invoke(_ID);
+        Debug.Log(seriesID);
+        ON_SeriesSelection.Invoke(seriesID);
     }
 }

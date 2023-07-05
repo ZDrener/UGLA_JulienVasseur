@@ -10,3 +10,8 @@ public class SeriesDataRaw
     public string note;
     public string episodes;
 }
+
+public class RootObject
+{
+    public List<SeriesDataRaw> series { get; set; }
+}

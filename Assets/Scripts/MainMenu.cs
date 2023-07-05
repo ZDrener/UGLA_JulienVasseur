@@ -20,20 +20,21 @@ public class MainMenu : MonoBehaviour
 
     private void UpdateMenu()
     {
+        Debug.Log("Launched update method");
+
         // Destroy all previous buttons
         foreach (GameObject lOldButton in currentSelectionButtons)
         {
             Destroy(lOldButton);
         }
 
+        // Create new buttons
         GameObject lNewButton;
         foreach (SeriesData seriesData in SeriesLoader.seriesList)
         {
             lNewButton = Instantiate(serieSelectionButton);
             lNewButton.transform.SetParent(verticalLayoutGroup.transform, false);
             lNewButton.GetComponentInChildren<TextMeshProUGUI>().text = seriesData.title;
-        }
-
-        
+        }        
     }
 }

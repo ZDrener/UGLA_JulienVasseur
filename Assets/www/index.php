@@ -14,6 +14,12 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Create a catalogue class
+class Catalogue
+{
+    public $series;
+}
+
 // Fetch series data from the database
 $sql = "SELECT id, title, genre, note, episodes FROM series";
 $result = $conn->query($sql);
@@ -27,13 +33,17 @@ if ($result->num_rows > 0) {
         $series[] = $row;
     }
 
+    $catalogue = new Catalogue();
+
+    $catalogue->series = $series;
+
     // Convert the array to JSON
-    $json = json_encode($series, JSON_PRETTY_PRINT);
+    $json = json_encode($catalogue, JSON_PRETTY_PRINT);
 
     // Save the JSON data to a file
     file_put_contents('series.json', $json);
 
-    echo "JSON file generated successfully.";
+    echo "series JSON file generated successfully.";
 } else {
     echo "No series data found.";
 }

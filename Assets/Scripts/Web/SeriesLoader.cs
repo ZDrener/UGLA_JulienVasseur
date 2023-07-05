@@ -52,13 +52,11 @@ public class SeriesLoader : MonoBehaviour
     {
         string jsonString = File.ReadAllText(jsonFilePath);
 
-        List<SeriesDataRaw> lSeriesListRaw = JsonConvert.DeserializeObject<List<SeriesDataRaw>>(jsonString);
-        
-        SeriesData lData;
+        List<SeriesDataRaw> lSeriesListRaw = JsonConvert.DeserializeObject<RootObject>(jsonString).series;
 
         foreach (SeriesDataRaw lRaw in lSeriesListRaw)
         {
-            lData = new SeriesData();
+            SeriesData lData = new SeriesData();
 
             lData.id = StringToInt(lRaw.id);
             lData.title = lRaw.title;
@@ -66,19 +64,16 @@ public class SeriesLoader : MonoBehaviour
             lData.note = StringToInt(lRaw.note);
             lData.episodes = StringToInt(lRaw.episodes);
 
-            Debug.Log(lRaw.title);
-
             seriesList.Add(lData);
         }
 
         ON_SeriesUpdated.Invoke();
     }
 
-    private int StringToInt(string pString)
+    private int StringToInt(string value)
     {
-        int lInt;
-        if (int.TryParse(pString, out lInt)) return lInt;
-        else Debug.LogError("Value cannot be cast to an int !");
-        return 0;
+        int result;
+        int.TryParse(value, out result);
+        return result;
     }
 }

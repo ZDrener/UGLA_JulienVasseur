@@ -27,15 +27,15 @@ public class SeriesLoader : MonoBehaviour
         StartCoroutine(GetRequest(_InputField.text));
     }
 
-    private IEnumerator GetRequest(string uri)
+    private IEnumerator GetRequest(string pUri)
     {
         // From UnityWebRequest documentation
-        using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(pUri))
         {
             // Request and wait for the desired page.
             yield return webRequest.SendWebRequest();
 
-            string[] pages = uri.Split('/');
+            string[] pages = pUri.Split('/');
             int page = pages.Length - 1;
 
             switch (webRequest.result)

@@ -20,10 +20,9 @@ class Catalogue
     public $series;
     public $genre;
 }
-
-// Fetch series data from the database
 $catalogue = new Catalogue();
 
+// Fetch series data from the database
 $sql = "SELECT id, title, genre, note, episodes FROM series";
 $result = $conn->query($sql);
 
@@ -43,15 +42,16 @@ if ($result->num_rows > 0) {
     echo "No series data found.<br>";
 }
 
+// Fetch genre data from the database
 $sql = "SELECT id, Genre FROM genre";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
-    // Create an array to store series data
+    // Create an array to store genre data
     $genre = array();
 
     while ($row = $result->fetch_assoc()) {
-        // Add series data to the array
+        // Add genre data to the array
         $genre[] = $row;
     }   
 

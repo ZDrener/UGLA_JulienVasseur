@@ -21,11 +21,11 @@ public class MainMenu : MonoBehaviour
     private void Awake()
     {
         SeriesLoader.ON_SeriesUpdated.AddListener(UpdateMenu);
+        SeriesLoader.ON_ConnectionFailed.AddListener(DeleteOldButtons);
     }
 
     private void UpdateMenu()
     {
-        Debug.Log("Launched update method");
         DeleteOldButtons();
         CreateButtons();
     }

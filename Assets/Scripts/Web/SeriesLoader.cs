@@ -5,16 +5,26 @@ using UnityEngine;
 using UnityEngine.Networking;
 using Newtonsoft.Json;
 using UnityEngine.Events;
+using TMPro;
 
 public class SeriesLoader : MonoBehaviour
 {
     private string _JsonFilePath = "./Assets/www/series.json";
 
     public static UnityEvent ON_SeriesUpdated = new UnityEvent();
+    public static UnityEvent ON_ConnectionFailed = new UnityEvent();
 
-    void Start()
+    [SerializeField] private TMP_InputField _InputField;
+
+    private void Start()
     {
-        StartCoroutine(GetRequest("http://ugla/"));
+        FetchInfo();
+    }
+
+    public void FetchInfo()
+    {
+        // Default is "http://ugla/"
+        StartCoroutine(GetRequest(_InputField.text));
     }
 
     private IEnumerator GetRequest(string uri)
@@ -32,22 +42,36 @@ public class SeriesLoader : MonoBehaviour
             {
                 case UnityWebRequest.Result.ConnectionError:
                 case UnityWebRequest.Result.DataProcessingError:
-                    Debug.LogError(pages[page] + ": Error: " + webRequest.error);
+                    Debug.LogWarning(pages[page] + ": Error: " + webRequest.error);
+                    ConnectionFailed();
                     break;
                 case UnityWebRequest.Result.ProtocolError:
-                    Debug.LogError(pages[page] + ": HTTP Error: " + webRequest.error);
+                    Debug.LogWarning(pages[page] + ": HTTP Error: " + webRequest.error);
+                    ConnectionFailed();
                     break;
                 case UnityWebRequest.Result.Success:
                     Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
+                    ReadJSON();
                     break;
-            }
-
-            ReadJSON();
+            }            
         }
+    }
+
+    private void ConnectionFailed()
+    {
+        // Clear old lists
+        GenreData.list.Clear();
+        SeriesData.list.Clear();
+
+        ON_ConnectionFailed.Invoke();
     }
 
     private void ReadJSON()
     {
+        // Clear old lists
+        GenreData.list.Clear();
+        SeriesData.list.Clear();
+
         string jsonString = File.ReadAllText(_JsonFilePath);        
 
         // Get genres
